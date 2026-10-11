@@ -10,6 +10,8 @@ namespace EARS::Modules
 {
     void DemoPackageManager::SetPendingPackageByIndex(const uint32_t InIndex)
     {
+        assert(InIndex < GetNumPackages());
+
         const DemoPackage* Package = GetPackage(InIndex);
         assert(Package);
 
@@ -37,6 +39,6 @@ namespace EARS::Modules
 
     DemoPackageManager* EARS::Modules::DemoPackageManager::GetInstance()
     {
-        return *(DemoPackageManager**)0x1129880;
+        return *(DemoPackageManager**)0x01129880;
     }
 }

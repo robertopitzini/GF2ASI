@@ -180,6 +180,13 @@ void EARS::Framework::SimManager::ForEachPacket(const EARS::Framework::SimManage
 	}
 }
 
+EARS::Framework::Base* EARS::Framework::SimManager::FindBase(const EARS::Common::guid128_t& InInstanceId,
+	EARS::Framework::Base* InRelativeTo) const
+{
+	return MemUtils::CallClassMethod<EARS::Framework::Base*, const SimManager*,
+		const EARS::Common::guid128_t*, EARS::Framework::Base*>(0x0446100, this, &InInstanceId, InRelativeTo);
+}
+
 EARS::Framework::SimManager* EARS::Framework::SimManager::GetInstance()
 {
 	return *(SimManager**)0x1223410;

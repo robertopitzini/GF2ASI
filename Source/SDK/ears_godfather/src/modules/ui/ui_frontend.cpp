@@ -3,83 +3,131 @@
 #include "Platform/MemUtils.h"
 
 // SDK
-#include "ears_common/bitflags.h"
+#include "main/portlockmanager.h"
+
+// C++
+#include <assert.h>
 
 namespace EARS::Apt
 {
-	static UIFrontend::StateData s_StateData[37];
+	// s_aStateData: 38 twelve-byte entries of const data, indexed by the
+	// FrontendState value rather than by a dense list, so entry 0 is the all-zero
+	// placeholder for NONE.
+	static const uintptr_t ADDR_S_A_STATE_DATA = 0x00D89448;
 
-	class PortLockManager
-	{
-	public:
+	static const uintptr_t ADDR_S_E_NEXT_STATE = 0x00E5672C;
+	static const uintptr_t ADDR_S_E_CURRENT_STATE = 0x01130548;
+	static const uintptr_t ADDR_S_FLAGS = 0x01130590;
 
-		void SetIsDialogAllowed(const bool bDialogAllowed)
-		{
-			MemUtils::CallClassMethod<void, PortLockManager*, bool>(0x068C590, this, bDialogAllowed);
-		}
+	static const uintptr_t ADDR_INSTANCE = 0x01129928;
 
-		static PortLockManager* GetInstance()
-		{
-			return *(PortLockManager**)0x1129814;
-		}
-	};
+	static const uintptr_t ADDR_ADD_NEXT_STATE_SEQUENCE = 0x00931F80;
+	static const uintptr_t ADDR_START_NEW_GAME = 0x009315A0;
+	static const uintptr_t ADDR_START_BUTTON_PRESSED = 0x00931130;
+	static const uintptr_t ADDR_RESTART_FE_LOOP_TO_STATE = 0x009316E0;
 
-	void UIFrontend::StartNewGame()
-	{
-		MemUtils::CallClassMethod<void, UIFrontend*>(0x9315A0, this);
-	}
+	// The mod's copy of the image's table, and the entry functions it held before
+	// any PatchState call.
+	static UIFrontend::StateData s_StateData[UIFrontend::NUM_STATES];
+	static UIFrontend::StateFunc s_OriginalStateFuncs[UIFrontend::NUM_STATES];
 
 	void UIFrontend::ExecuteNextState()
 	{
-		hook::Type<FrontendState> CurrentStateVal = hook::Type<FrontendState>(0x1130548);
-		hook::Type<FrontendState> NextStateVal = hook::Type<FrontendState>(0x0E5672C);
-		hook::Type<Flags32> FrontendFlagsVal = hook::Type<Flags32>(0x01130590);
-
-		const Flags32 FrontendFlags = FrontendFlagsVal.get();
-		//if (FrontendFlags.Test((int)UIFrontendFlags::FE_FLAG_ALLOW_STATE_CHANGES))
-		if ((FrontendFlags.GetAllFlags() & 0x10) == 0)
+		Flags32& Flags = GetFlags();
+		if (Flags.Test((uint32_t)UIFrontendFlags::FE_FLAG_BLOCK_STATE_CHANGES))
 		{
-			const FrontendState NextState = NextStateVal.get();
-			UIFrontend::StateData& State = s_StateData[(int)NextState - 1];
-
-			const FrontendState PreviousState = CurrentStateVal.get();
-			CurrentStateVal.set(PreviousState);
-
-			PortLockManager* PortLockMgr = PortLockManager::GetInstance();
-			PortLockMgr->SetIsDialogAllowed(State.m_Flags != 1);
-
-			State.m_Func(this, PreviousState);
+			return;
 		}
+
+		const FrontendState NextState = GetNextState();
+		assert((uint32_t)NextState < NUM_STATES);
+
+		const FrontendState PreviousState = GetCurrentState();
+		SetCurrentState(NextState);
+
+		const StateData& State = s_StateData[(uint32_t)NextState];
+
+		EARS::MainLoop::PortLockManager* PortLockMgr = EARS::MainLoop::PortLockManager::GetInstance();
+		PortLockMgr->SetIsDialogAllowed((State.m_Flags & (uint32_t)FrontendStateFlags::FE_STATE_FLAG_NO_PORT_DIALOGS) == 0);
+
+		State.m_Func(this, PreviousState);
 	}
 
-	void UIFrontend::AddNextStateSequence(int DelayTimeMS)
+	void UIFrontend::AddNextStateSequence(int32_t InDelayTimeMS)
 	{
-		MemUtils::CallClassMethod<void, UIFrontend*>(0x931F80, this);
+		MemUtils::CallClassMethod<void, UIFrontend*, int32_t>(ADDR_ADD_NEXT_STATE_SEQUENCE, this, InDelayTimeMS);
 	}
 
-	void UIFrontend::EnterState_StartNewGame(int ePreviousState)
+	void UIFrontend::StartNewGame()
 	{
+		MemUtils::CallClassMethod<void, UIFrontend*>(ADDR_START_NEW_GAME, this);
+	}
+
+	void UIFrontend::StartButtonPressed()
+	{
+		MemUtils::CallCdeclMethod<void>(ADDR_START_BUTTON_PRESSED);
+	}
+
+	void UIFrontend::RestartFrontEndLoopToState(FrontendState InState)
+	{
+		MemUtils::CallClassMethod<void, UIFrontend*, FrontendState>(ADDR_RESTART_FE_LOOP_TO_STATE, this, InState);
+	}
+
+	void UIFrontend::EnterState_StartNewGame(EARS::Apt::UIFrontend* InThis, FrontendState InPreviousState)
+	{
+		assert(InThis);
+		InThis->StartNewGame();
+	}
+
+	void UIFrontend::SetNextState(FrontendState InState)
+	{
+		*(FrontendState*)ADDR_S_E_NEXT_STATE = InState;
+	}
+
+	UIFrontend::FrontendState UIFrontend::GetNextState()
+	{
+		return *(FrontendState*)ADDR_S_E_NEXT_STATE;
+	}
+
+	UIFrontend::FrontendState UIFrontend::GetCurrentState()
+	{
+		return *(FrontendState*)ADDR_S_E_CURRENT_STATE;
+	}
+
+	Flags32& UIFrontend::GetFlags()
+	{
+		return *(Flags32*)ADDR_S_FLAGS;
 	}
 
 	UIFrontend* UIFrontend::GetInstance()
 	{
-		return *(UIFrontend**)0x1129928;
+		return *(UIFrontend**)ADDR_INSTANCE;
 	}
 
-	void UIFrontend::PatchState(int State, StateFunc Function)
+	void UIFrontend::PatchState(FrontendState InState, StateFunc InFunction)
 	{
-		UIFrontend::StateData& State2 = s_StateData[State - 1];
-		State2.m_Func = Function;
+		assert((uint32_t)InState < NUM_STATES);
+		s_StateData[(uint32_t)InState].m_Func = InFunction;
+	}
+
+	UIFrontend::StateFunc UIFrontend::GetOriginalStateFunc(FrontendState InState)
+	{
+		assert((uint32_t)InState < NUM_STATES);
+		return s_OriginalStateFuncs[(uint32_t)InState];
 	}
 
 	void UIFrontend::CopyStates()
 	{
-		hook::Type<UIFrontend::StateData[37]> States = hook::Type<UIFrontend::StateData[37]>(0xD89450);
-		for (int32_t idx = 0; idx < 37; idx++)
+		const StateData* GameStates = (const StateData*)ADDR_S_A_STATE_DATA;
+		for (uint32_t Idx = 0; Idx < NUM_STATES; Idx++)
 		{
-			s_StateData[idx].m_Flags = States[idx].m_Flags;
-			s_StateData[idx].m_State = States[idx].m_State;
-			s_StateData[idx].m_Func = States[idx].m_Func;
+			s_StateData[Idx] = GameStates[Idx];
+			s_OriginalStateFuncs[Idx] = GameStates[Idx].m_Func;
 		}
+	}
+
+	void UIFrontend::SetCurrentState(FrontendState InState)
+	{
+		*(FrontendState*)ADDR_S_E_CURRENT_STATE = InState;
 	}
 }

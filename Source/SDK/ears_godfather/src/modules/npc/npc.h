@@ -45,6 +45,9 @@ namespace EARS
 			char m_Padding_NPC_3[0x54];
 			SafePtr<EARS::Modules::SimNPC> m_OwnerSimNPC;						// 0x2178
 
+			// m_CommonCombatDatabase											// 0x2194
+			// m_MentalState													// 0x2538
+
 		};
 
 		static_assert(sizeof(NPC) == 8576);

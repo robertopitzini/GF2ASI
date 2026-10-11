@@ -22,6 +22,9 @@ namespace EARS
 {
 	namespace Framework
 	{
+		// Declared rather than included: base.h reaches back into this header.
+		class Base;
+
 		/**
 		 * Defines a SimGroup structure the game uses to generate entities from packets 
 		 */
@@ -93,6 +96,14 @@ namespace EARS
 
 			// Used to allocate Attribute Handlers
 			EA::Allocator::IAllocator* GetBaseAllocator() const { return m_BaseAllocator; }
+
+			/**
+			 * The live Base carrying InInstanceId, or nullptr when nothing with
+			 * that guid is currently streamed in. InRelativeTo scopes the search
+			 * to one entity's sim group; pass nullptr to search globally.
+			 */
+			EARS::Framework::Base* FindBase(const EARS::Common::guid128_t& InInstanceId,
+				EARS::Framework::Base* InRelativeTo) const;
 
 			// Fetch the SimManager instance
 			static SimManager* GetInstance();
