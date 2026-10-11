@@ -1,13 +1,13 @@
 #pragma once
 
-#include "framework/toolkits/statemachine/animatesm.h"
+#include "modules/npc/statemachines/npcsm.h"
 
 // Addons
 #include "Platform/MemUtils.h"
 
 namespace EARS::Modules
 {
-	class NPCStealthKillSM : public EARS::Framework::AnimateStateMachine
+	class NPCStealthKillSM : public EARS::Modules::NPCStateMachine
 	{
 	public:
 
@@ -15,14 +15,15 @@ namespace EARS::Modules
 		NPCStealthKillSM(uint32_t TableID, EARS::StateMachineSys::StateMachineParams* SMParams);
 		virtual ~NPCStealthKillSM();
 
-		//~ Begin AnimateStateMachine Interface
+		//~ Begin NPCStateMachine Interface
 		virtual uint32_t GetStateMachineID() const override { return 0x0E4B1F57A; }
-		//~ End AnimateStateMachine Interface
+		//~ End NPCStateMachine Interface
 
 		static EARS::StateMachineSys::StateMachine* S_NPCStealthKillSM_FactoryFn(unsigned int InID, EARS::StateMachineSys::StateMachineParams* InSMParams);
 
 	private:
-		char m_Padding[0x28];
+		// TODO: sizeof is the shipping build's, from the allocation in S_NPCStealthKillSM_FactoryFn.
+		char m_Padding[0x8];
 	};
 	static_assert(sizeof(NPCStealthKillSM) == 0x78);
 }

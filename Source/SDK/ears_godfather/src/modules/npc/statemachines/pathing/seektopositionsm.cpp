@@ -3,7 +3,7 @@
 namespace EARS::Modules
 {
 	SeekToPositionSM::SeekToPositionSM(uint32_t TableID, EARS::StateMachineSys::StateMachineParams* SMParams)
-		: EARS::Framework::AnimateStateMachine(TableID, SMParams)
+		: EARS::Modules::PathingBaseSM(TableID, SMParams)
 	{
 		MemUtils::CallClassMethod<void, SeekToPositionSM*, uint32_t, EARS::StateMachineSys::StateMachineParams*>(0x075E510, this, TableID, SMParams);
 	}

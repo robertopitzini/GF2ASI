@@ -3,7 +3,7 @@
 namespace EARS::Modules
 {
 	NPCVaultSM::NPCVaultSM(uint32_t TableID, EARS::StateMachineSys::StateMachineParams* SMParams)
-		: EARS::Framework::AnimateStateMachine(TableID, SMParams)
+		: EARS::Modules::NPCStateMachine(TableID, SMParams)
 	{
 		MemUtils::CallClassMethod<void, NPCVaultSM*, uint32_t, EARS::StateMachineSys::StateMachineParams*>(0x074B7C0, this, TableID, SMParams);
 	}

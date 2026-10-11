@@ -3,7 +3,7 @@
 namespace EARS::Modules
 {
 	UseInterestingObjectSM::UseInterestingObjectSM(uint32_t TableID, EARS::StateMachineSys::StateMachineParams* SMParams)
-		: EARS::Framework::AnimateStateMachine(TableID, SMParams)
+		: EARS::Modules::NPCStateMachine(TableID, SMParams)
 	{
 		MemUtils::CallClassMethod<void, UseInterestingObjectSM*, uint32_t, EARS::StateMachineSys::StateMachineParams*>(0x073FB40, this, TableID, SMParams);
 	}

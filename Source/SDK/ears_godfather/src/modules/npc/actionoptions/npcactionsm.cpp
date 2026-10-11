@@ -3,7 +3,7 @@
 namespace EARS::Modules
 {
 	NPCActionSM::NPCActionSM(uint32_t TableID, EARS::StateMachineSys::StateMachineParams* SMParams)
-		: EARS::Framework::AnimateStateMachine(TableID, SMParams)
+		: EARS::Modules::NPCStateMachine(TableID, SMParams)
 	{
 		MemUtils::CallClassMethod<void, NPCActionSM*, uint32_t, EARS::StateMachineSys::StateMachineParams*>(0x077F520, this, TableID, SMParams);
 	}

@@ -3,7 +3,7 @@
 namespace EARS::Modules
 {
 	NPCMeleeSupporterSM::NPCMeleeSupporterSM(uint32_t TableID, EARS::StateMachineSys::StateMachineParams* SMParams)
-		: EARS::Framework::AnimateStateMachine(TableID, SMParams)
+		: EARS::Modules::NPCStateMachine(TableID, SMParams)
 	{
 		MemUtils::CallClassMethod<void, NPCMeleeSupporterSM*, uint32_t, EARS::StateMachineSys::StateMachineParams*>(0x0769450, this, TableID, SMParams);
 	}

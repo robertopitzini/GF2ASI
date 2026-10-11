@@ -3,7 +3,7 @@
 namespace EARS::Modules
 {
 	FollowPathStateMachine::FollowPathStateMachine(uint32_t TableID, EARS::StateMachineSys::StateMachineParams* SMParams)
-		: EARS::Framework::AnimateStateMachine(TableID, SMParams)
+		: EARS::Modules::PathingBaseSM(TableID, SMParams)
 	{
 		MemUtils::CallClassMethod<void, FollowPathStateMachine*, uint32_t, EARS::StateMachineSys::StateMachineParams*>(0x07575A0, this, TableID, SMParams);
 	}

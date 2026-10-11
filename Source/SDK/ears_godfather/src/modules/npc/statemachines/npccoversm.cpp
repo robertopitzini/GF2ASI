@@ -3,7 +3,7 @@
 namespace EARS::Modules
 {
 	CoverDashSM::CoverDashSM(uint32_t TableID, EARS::StateMachineSys::StateMachineParams* SMParams)
-		: EARS::Framework::AnimateStateMachine(TableID, SMParams)
+		: EARS::Modules::NPCStateMachine(TableID, SMParams)
 	{
 		MemUtils::CallClassMethod<void, CoverDashSM*, uint32_t, EARS::StateMachineSys::StateMachineParams*>(0x07673D0, this, TableID, SMParams);
 	}
@@ -34,7 +34,7 @@ namespace EARS::Modules
 	}
 
 	CoverPeekSM::CoverPeekSM(uint32_t TableID, EARS::StateMachineSys::StateMachineParams* SMParams)
-		: EARS::Modules::SentientSM(TableID, SMParams)
+		: EARS::Modules::NPCStateMachine(TableID, SMParams)
 	{
 	}
 

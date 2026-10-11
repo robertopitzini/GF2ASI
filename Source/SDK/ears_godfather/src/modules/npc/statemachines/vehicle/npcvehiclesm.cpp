@@ -3,7 +3,7 @@
 namespace EARS::Modules
 {
 	NPCVehicleSM::NPCVehicleSM(uint32_t TableID, EARS::StateMachineSys::StateMachineParams* SMParams)
-		: EARS::Framework::AnimateStateMachine(TableID, SMParams)
+		: EARS::Modules::NPCStateMachine(TableID, SMParams)
 	{
 	}
 

@@ -1,13 +1,13 @@
 #pragma once
 
-#include "framework/toolkits/statemachine/animatesm.h"
+#include "modules/npc/statemachines/npcsm.h"
 
 // Addons
 #include "Platform/MemUtils.h"
 
 namespace EARS::Modules
 {
-	class CommonNPCSM : public EARS::Framework::AnimateStateMachine
+	class CommonNPCSM : public EARS::Modules::NPCStateMachine
 	{
 	public:
 
@@ -23,7 +23,8 @@ namespace EARS::Modules
 		static EARS::StateMachineSys::StateMachine* S_CommonNPCSM_FactoryFn(unsigned int InID, EARS::StateMachineSys::StateMachineParams* InSMParams);
 
 	private:
-		char m_Padding[0x14];
+		// TODO: sizeof is the shipping build's, from the allocation in S_CommonNPCSM_FactoryFn.
+		char m_Padding[0x4];
 	};
-	static_assert(sizeof(CommonNPCSM) == 0x64);
+	static_assert(sizeof(CommonNPCSM) == 0x74);
 }

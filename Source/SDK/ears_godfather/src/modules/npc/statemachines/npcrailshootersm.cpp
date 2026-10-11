@@ -3,7 +3,7 @@
 namespace EARS::Modules
 {
 	NPCRailShooterSM::NPCRailShooterSM(uint32_t TableID, EARS::StateMachineSys::StateMachineParams* SMParams)
-		: EARS::Framework::AnimateStateMachine(TableID, SMParams)
+		: EARS::Modules::NPCStateMachine(TableID, SMParams)
 	{
 		MemUtils::CallClassMethod<void, NPCRailShooterSM*, uint32_t, EARS::StateMachineSys::StateMachineParams*>(0x0776750, this, TableID, SMParams);
 	}

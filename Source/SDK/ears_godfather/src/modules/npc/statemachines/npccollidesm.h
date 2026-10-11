@@ -1,13 +1,13 @@
 #pragma once
 
-#include "framework/toolkits/statemachine/animatesm.h"
+#include "modules/npc/statemachines/npcsm.h"
 
 // Addons
 #include "Platform/MemUtils.h"
 
 namespace EARS::Modules
 {
-	class NPCCollideSM : public EARS::Framework::AnimateStateMachine
+	class NPCCollideSM : public EARS::Modules::NPCStateMachine
 	{
 	public:
 
@@ -15,12 +15,12 @@ namespace EARS::Modules
 		NPCCollideSM(uint32_t TableID, EARS::StateMachineSys::StateMachineParams* SMParams);
 		virtual ~NPCCollideSM();
 
-		//~ Begin AnimateStateMachine Interface
+		//~ Begin NPCStateMachine Interface
 		virtual uint32_t GetStateMachineID() const override { return 0x408C7112; }
 		virtual bool HandleStateMessage(uint32_t SimTime, float FrameTime, uint32_t CurFlags, uint32_t MessageID, EARS::StateMachineSys::State::StateMessageData* MsgData) override;
 		virtual bool CheckTransition(uint32_t SimTime, float FrameTime, uint32_t TransID, EARS::StateMachineSys::Transition::TransitionData* TransData) override;
 		virtual void InitialiseChild(EARS::StateMachineSys::StateMachine& ChildMachine) override;
-		//~ End AnimateStateMachine Interface
+		//~ End NPCStateMachine Interface
 
 		static EARS::StateMachineSys::StateMachine* S_NPCCollideSM_FactoryFn(unsigned int InID, EARS::StateMachineSys::StateMachineParams* InSMParams);
 
@@ -34,7 +34,8 @@ namespace EARS::Modules
 		};
 
 	private:
-		char m_Padding[0x28];
+		// TODO: sizeof is the shipping build's, from the allocation in S_NPCCollideSM_FactoryFn.
+		char m_Padding[0x8];
 	};
 	static_assert(sizeof(NPCCollideSM) == 0x78);
 }

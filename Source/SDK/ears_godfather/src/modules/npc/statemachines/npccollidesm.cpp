@@ -3,7 +3,7 @@
 namespace EARS::Modules
 {
 	NPCCollideSM::NPCCollideSM(uint32_t TableID, EARS::StateMachineSys::StateMachineParams* SMParams)
-		: EARS::Framework::AnimateStateMachine(TableID, SMParams)
+		: EARS::Modules::NPCStateMachine(TableID, SMParams)
 	{
 		MemUtils::CallClassMethod<void, NPCCollideSM*, uint32_t, EARS::StateMachineSys::StateMachineParams*>(0x073D5D0, this, TableID, SMParams);
 	}

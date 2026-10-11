@@ -1,13 +1,13 @@
 #pragma once
 
-#include "framework/toolkits/statemachine/animatesm.h"
+#include "modules/npc/statemachines/npcsm.h"
 
 // Addons
 #include "Platform/MemUtils.h"
 
 namespace EARS::Modules
 {
-	class NPCRailShooterSM : public EARS::Framework::AnimateStateMachine
+	class NPCRailShooterSM : public EARS::Modules::NPCStateMachine
 	{
 	public:
 
@@ -15,17 +15,18 @@ namespace EARS::Modules
 		NPCRailShooterSM(uint32_t TableID, EARS::StateMachineSys::StateMachineParams* SMParams);
 		virtual ~NPCRailShooterSM();
 
-		//~ Begin AnimateStateMachine Interface
+		//~ Begin NPCStateMachine Interface
 		virtual uint32_t GetStateMachineID() const override { return 0x55662773; }
 		virtual bool HandleStateMessage(uint32_t SimTime, float FrameTime, uint32_t CurFlags, uint32_t MessageID, EARS::StateMachineSys::State::StateMessageData* MsgData) override;
 		virtual bool CheckTransition(uint32_t SimTime, float FrameTime, uint32_t TransID, EARS::StateMachineSys::Transition::TransitionData* TransData) override;
 		virtual void InitialiseChild(EARS::StateMachineSys::StateMachine& ChildMachine) override;
-		//~ End AnimateStateMachine Interface
+		//~ End NPCStateMachine Interface
 
 		static EARS::StateMachineSys::StateMachine* S_NPCRailShooterSM_FactoryFn(unsigned int InID, EARS::StateMachineSys::StateMachineParams* InSMParams);
 
 	private:
-		char m_Padding[0x64];
+		// TODO: sizeof is the shipping build's, from the allocation in S_NPCRailShooterSM_FactoryFn.
+		char m_Padding[0x44];
 	};
 	static_assert(sizeof(NPCRailShooterSM) == 0xB4);
 }

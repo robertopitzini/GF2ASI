@@ -3,7 +3,7 @@
 namespace EARS::Modules
 {
 	CrewCommandStateMachine::CrewCommandStateMachine(uint32_t TableID, EARS::StateMachineSys::StateMachineParams* SMParams)
-		: EARS::Framework::AnimateStateMachine(TableID, SMParams)
+		: EARS::Modules::NPCStateMachine(TableID, SMParams)
 	{
 		MemUtils::CallClassMethod<void, CrewCommandStateMachine*, uint32_t, EARS::StateMachineSys::StateMachineParams*>(0x073B5B0, this, TableID, SMParams);
 	}

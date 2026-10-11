@@ -3,7 +3,7 @@
 namespace EARS::Modules
 {
 	CommonNPCSM::CommonNPCSM(uint32_t TableID, EARS::StateMachineSys::StateMachineParams* SMParams)
-		: EARS::Framework::AnimateStateMachine(TableID, SMParams)
+		: EARS::Modules::NPCStateMachine(TableID, SMParams)
 	{
 		MemUtils::CallClassMethod<void, CommonNPCSM*, uint32_t, EARS::StateMachineSys::StateMachineParams*>(0x073ED00, this, TableID, SMParams);
 	}

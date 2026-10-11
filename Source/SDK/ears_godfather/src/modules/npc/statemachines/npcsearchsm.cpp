@@ -4,7 +4,7 @@
 namespace EARS::Modules
 {
 	AmbushSM::AmbushSM(uint32_t TableID, EARS::StateMachineSys::StateMachineParams* SMParams)
-		: EARS::Modules::SentientSM(TableID, SMParams)
+		: EARS::Modules::NPCStateMachine(TableID, SMParams)
 	{
 	}
 
@@ -29,7 +29,7 @@ namespace EARS::Modules
 	}
 
 	NPCRandomSearchSM::NPCRandomSearchSM(uint32_t TableID, EARS::StateMachineSys::StateMachineParams* SMParams)
-		: EARS::Framework::AnimateStateMachine(TableID, SMParams)
+		: EARS::Modules::BaseSearchSM(TableID, SMParams)
 	{
 		MemUtils::CallClassMethod<void, NPCRandomSearchSM*, uint32_t, EARS::StateMachineSys::StateMachineParams*>(0x0749F60, this, TableID, SMParams);
 	}
@@ -60,7 +60,7 @@ namespace EARS::Modules
 	}
 
 	NPCSearchSM::NPCSearchSM(uint32_t TableID, EARS::StateMachineSys::StateMachineParams* SMParams)
-		: EARS::Framework::AnimateStateMachine(TableID, SMParams)
+		: EARS::Modules::BaseSearchSM(TableID, SMParams)
 	{
 		MemUtils::CallClassMethod<void, NPCSearchSM*, uint32_t, EARS::StateMachineSys::StateMachineParams*>(0x074A840, this, TableID, SMParams);
 	}

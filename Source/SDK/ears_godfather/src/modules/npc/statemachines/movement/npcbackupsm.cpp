@@ -3,7 +3,7 @@
 namespace EARS::Modules
 {
 	NPCBackupSM::NPCBackupSM(uint32_t TableID, EARS::StateMachineSys::StateMachineParams* SMParams)
-		: EARS::Framework::AnimateStateMachine(TableID, SMParams)
+		: EARS::Modules::PathingBaseSM(TableID, SMParams)
 	{
 		MemUtils::CallClassMethod<void, NPCBackupSM*, uint32_t, EARS::StateMachineSys::StateMachineParams*>(0x0744650, this, TableID, SMParams);
 	}

@@ -3,7 +3,7 @@
 namespace EARS::Modules
 {
 	NPCDeathSM::NPCDeathSM(uint32_t TableID, EARS::StateMachineSys::StateMachineParams* SMParams)
-		: EARS::Framework::AnimateStateMachine(TableID, SMParams)
+		: EARS::Modules::NPCStateMachine(TableID, SMParams)
 	{
 		MemUtils::CallClassMethod<void, NPCDeathSM*, uint32_t, EARS::StateMachineSys::StateMachineParams*>(0x076DCA0, this, TableID, SMParams);
 	}

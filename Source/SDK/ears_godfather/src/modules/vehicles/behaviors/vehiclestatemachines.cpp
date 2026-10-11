@@ -1,9 +1,14 @@
 #include "vehiclestatemachines.h"
 
+// SDK
+#include "ears_statemachine/statemachinemanager.h"
+#include "framework/core/memory/globalheapallocator.h"
+#include "framework/toolkits/statemachine/smbuilder.h"
+
 namespace EARS::Modules
 {
 	CivilianVehicleStateMachine::CivilianVehicleStateMachine(uint32_t TableID, EARS::StateMachineSys::StateMachineParams* SMParams)
-		: EARS::Framework::AnimateStateMachine(TableID, SMParams)
+		: EARS::Modules::VehicleAiStateMachine(TableID, SMParams)
 	{
 		MemUtils::CallClassMethod<void, CivilianVehicleStateMachine*, uint32_t, EARS::StateMachineSys::StateMachineParams*>(0x0873570, this, TableID, SMParams);
 	}
@@ -36,5 +41,28 @@ namespace EARS::Modules
 	EARS::StateMachineSys::StateMachine* CivilianVehicleStateMachine::S_CivilianVehicleStateMachine_FactoryFn(unsigned int InID, EARS::StateMachineSys::StateMachineParams* InSMParams)
 	{
 		return new CivilianVehicleStateMachine(InID, InSMParams);
+	}
+
+	/* static */
+	void CivilianVehicleStateMachine::BuildStateTable()
+	{
+		const uint32_t TableID = EARS::StateMachineSys::StateMachineManager::GetStateTableIDFromName("civilianVehicleMainTable");
+		if (EARS::StateMachineSys::StateMachineManager::GetInstance()->GetStateTableFromID(TableID) != nullptr)
+		{
+			return;
+		}
+
+		EARS::Framework::SMBuilder Builder("civilianVehicleMainTable", get_thread_new_allocator());
+
+		EARS::Framework::SMBuilderState* FollowGraphState = Builder.AddState("followGraph", -1);
+		FollowGraphState->AddUpdateMessage(MESSAGE_FOLLOWGRAPH_UPDATE);
+		FollowGraphState->AddTransition("done", TRANSID_DONE);
+
+		// Nothing terminates the machine: done just stops driving, and the vehicle sits in this
+		// state until RootVehicleSM swaps the brain out from under it.
+		EARS::Framework::SMBuilderState* DoneState = Builder.AddState("done", -1);
+		DoneState->AddEnterMessage(MESSAGE_DONE_INIT);
+
+		Builder.CompileAndRegister(kStateMachine_CivilianVehicleStateMachine, S_CivilianVehicleStateMachine_FactoryFn, "CivilianVehicleStateMachine");
 	}
 }

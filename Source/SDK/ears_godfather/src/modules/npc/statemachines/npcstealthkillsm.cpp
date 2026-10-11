@@ -3,7 +3,7 @@
 namespace EARS::Modules
 {
 	NPCStealthKillSM::NPCStealthKillSM(uint32_t TableID, EARS::StateMachineSys::StateMachineParams* SMParams)
-		: EARS::Framework::AnimateStateMachine(TableID, SMParams)
+		: EARS::Modules::NPCStateMachine(TableID, SMParams)
 	{
 		MemUtils::CallClassMethod<void, NPCStealthKillSM*, uint32_t, EARS::StateMachineSys::StateMachineParams*>(0x07FB9B0, this, TableID, SMParams);
 	}

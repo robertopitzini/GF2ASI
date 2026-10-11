@@ -3,7 +3,7 @@
 namespace EARS::Modules
 {
 	CoverPeekFireSM::CoverPeekFireSM(uint32_t TableID, EARS::StateMachineSys::StateMachineParams* SMParams)
-		: EARS::Modules::SentientSM(TableID, SMParams)
+		: EARS::Modules::NPCStateMachine(TableID, SMParams)
 	{
 	}
 

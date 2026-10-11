@@ -1,13 +1,13 @@
 #pragma once
 
-#include "framework/toolkits/statemachine/animatesm.h"
+#include "modules/npc/statemachines/pathing/pathingbasesm.h"
 
 // Addons
 #include "Platform/MemUtils.h"
 
 namespace EARS::Modules
 {
-	class FollowPathStateMachine : public EARS::Framework::AnimateStateMachine
+	class FollowPathStateMachine : public EARS::Modules::PathingBaseSM
 	{
 	public:
 
@@ -15,12 +15,12 @@ namespace EARS::Modules
 		FollowPathStateMachine(uint32_t TableID, EARS::StateMachineSys::StateMachineParams* SMParams);
 		virtual ~FollowPathStateMachine();
 
-		//~ Begin AnimateStateMachine Interface
+		//~ Begin PathingBaseSM Interface
 		virtual uint32_t GetStateMachineID() const override { return 0x6862A74C; }
 		virtual bool HandleStateMessage(uint32_t SimTime, float FrameTime, uint32_t CurFlags, uint32_t MessageID, EARS::StateMachineSys::State::StateMessageData* MsgData) override;
 		virtual bool CheckTransition(uint32_t SimTime, float FrameTime, uint32_t TransID, EARS::StateMachineSys::Transition::TransitionData* TransData) override;
 		virtual void InitialiseChild(EARS::StateMachineSys::StateMachine& ChildMachine) override;
-		//~ End AnimateStateMachine Interface
+		//~ End PathingBaseSM Interface
 
 		static EARS::StateMachineSys::StateMachine* S_FollowPathStateMachine_FactoryFn(unsigned int InID, EARS::StateMachineSys::StateMachineParams* InSMParams);
 
@@ -47,16 +47,17 @@ namespace EARS::Modules
 			FOLLOWPATHSM_LAST_STATE       = 16,
 		};
 
-
 	protected:
 
-		//~ Begin AnimateStateMachine Interface
+		//~ Begin PathingBaseSM Interface
 		virtual const EARS::StateMachineSys::StateMachineSnapshot* ReadInitDataFromSnapShot(const EARS::StateMachineSys::StateMachineSnapshot* pSnap) override;
 		virtual EARS::StateMachineSys::StateMachineSnapshot* WriteInitDataToSnapShot(EARS::StateMachineSys::StateMachineSnapshot* pSnap) override;
-		//~ End AnimateStateMachine Interface
+		//~ End PathingBaseSM Interface
 
 	private:
-		char m_Padding[0x114];
+		// TODO: sizeof is the shipping build's, from the allocation in S_FollowPathStateMachine_FactoryFn.
+		// The padding also covers the secondary base LevelingScheduler::Task, which is not modelled.
+		char m_Padding[0x70];
 	};
 	static_assert(sizeof(FollowPathStateMachine) == 0x164);
 }
