@@ -52,14 +52,6 @@
 
 #define SHOW_ATTRIBUTEPACKET_WINDOW 1
 
-#if DEBUG
-#define SHOW_DEMOGRAPHICS_TAB 0
-#define SHOW_FAMILY_TAB 1
-#else
-#define SHOW_DEMOGRAPHICS_TAB 0
-#define SHOW_FAMILY_TAB 1
-#endif // DEBUG
-
 #if ENABLE_ENTITY_SPAWN_DEBUG
 class NPCManager
 {
@@ -389,9 +381,7 @@ void ImGuiManager::DrawMenu()
 
 				DrawTab_TimeOfDaySettings();
 
-#if SHOW_DEMOGRAPHICS_TAB
 				DrawTab_DemographicSettings();
-#endif // SHOW_DEMOGRAPHICS_TAB
 
 				DrawTab_ObjectMgrSettings();
 
@@ -403,9 +393,7 @@ void ImGuiManager::DrawMenu()
 
 				DrawTab_BuildingSettings();
 
-#if SHOW_FAMILY_TAB
 				DrawTab_FamiliesSettings();
-#endif // SHOW_FAMILY_TAB
 
 				DrawTab_PlayerFamilyTreeSettings();
 

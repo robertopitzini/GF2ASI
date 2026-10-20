@@ -39,6 +39,8 @@
 #include "ears_physics/vehicles/ground/wheeled/havok_wheeled_vehicle.h"
 #include "ears_rt_llrender/shadermanager.h"
 
+#define SHOW_DEMOGRAPHICS_TAB 1
+
 // C++
 #include <filesystem>
 #include <string>
@@ -393,7 +395,6 @@ void ImGuiManager::DrawTab_BuildingSettings()
 
 void ImGuiManager::DrawTab_FamiliesSettings()
 {
-#if SHOW_FAMILY_TAB
 	EARS::Modules::FamilyManager* FamilyMgr = EARS::Modules::FamilyManager::GetInstance();
 	if (!FamilyMgr)
 	{
@@ -553,7 +554,6 @@ void ImGuiManager::DrawTab_FamiliesSettings()
 
 		ImGui::EndTabItem();
 	}
-#endif // SHOW_FAMILY_TAB
 }
 
 void ImGuiManager::DrawTab_PlayerFamilyTreeSettings()
