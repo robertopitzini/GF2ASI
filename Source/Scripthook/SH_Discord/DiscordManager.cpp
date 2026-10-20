@@ -88,8 +88,11 @@ void DiscordManager::HandleEvents(const RWS::CMsg& MsgEvent)
 			if (const String* DisplayName = CityMgr->GetDisplayName(CurrentCityID))
 			{
 				currentCity = DisplayName->c_str();
-				m_CurrentActivity.GetAssets().SetLargeImage(Presence::GetSmallImageFromCityID(CurrentCityID));
-				UpdateState("Walking around");
+				if (const char* SmallImage = Presence::GetSmallImageFromCityID(CurrentCityID))
+				{
+					m_CurrentActivity.GetAssets().SetLargeImage(SmallImage);
+					UpdateState("Walking around");
+				}
 			}
 		}
 	}
